@@ -22,13 +22,13 @@ from app.infra.repositories.SQLAlchemy_ORM.models.process_type import process_ty
 
 
 
-from app.domains.repositories.register_process_repository import RegisterProcessRepository
+from app.domains.repositories.process_repository import ProcessRepository
 # from app.infra.repositories.SQLAlchemy_ORM.models.user import user_table
 # from app.domains.repositories.user_repository import UserRepository
 # from app.domains.user_domain import UserDomain
 
 
-class SQLAlchemyORM(RegisterProcessRepository):
+class SQLAlchemyORM(ProcessRepository):
     def __init__(self, session):
         self.session = session
 
@@ -102,3 +102,11 @@ class SQLAlchemyORM(RegisterProcessRepository):
         ))
         self.session.commit()
         return inserted.inserted_primary_key[0]
+    
+    def find_process_change_by_id(self, process_change_id):
+        result = self.session.execute(select(process_change_table).filter_by(id=process_change_id))
+        return result.mappings().first()
+
+    def find_process_by_id(self, process_id: int):
+        result = self.session.execute(select(process_table).filter_by(id=process_id))
+        return result.mappings().first()

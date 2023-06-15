@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 
-from app.controllers.register_process_controller import router
-
+from app.controllers.process_controller import router as process
+from app.controllers.document_controller import router as document
 
 app = FastAPI()
 
-app.include_router(router)
+app.include_router(process)
+app.include_router(document)

@@ -1,17 +1,17 @@
 import datetime
-from app.domains.register_process_domain import RegisterProcessDomain
-from app.domains.repositories.register_process_repository import (
-    RegisterProcessRepository,
+from app.basemodels.process_basemodels import RegisterProcessInput
+from app.domains.repositories.process_repository import (
+    ProcessRepository,
 )
 
 
-class RegisterProcessService:
+class ProcessService:
     """_summary_"""
 
-    def __init__(self, repository: RegisterProcessRepository):
+    def __init__(self, repository: ProcessRepository):
         self.repository = repository
 
-    def register(self, process: RegisterProcessDomain):
+    def register(self, process: RegisterProcessInput):
         """_summary_
         Args:
             process (RegisterProcessDomain): _description_
@@ -47,6 +47,8 @@ class RegisterProcessService:
         process_id = self.repository.register_process(process_data)
         self.repository.register_attorney(process.data.process.attorney, process_id)
         
+        process_changes = []
+        
         for process_change in process.data.process.process_changes:
             
             process_change_type_id = self.repository.get_process_change_type(process_change.process_change_type)
@@ -64,6 +66,15 @@ class RegisterProcessService:
                 "deadline": process_change.deadline,
                 "status": process_change.status
             }
-            self.repository.register_process_change(process_change_data)
+            
+            process_change_id = self.repository.register_process_change(process_change_data)
+            
+            process_change_infos = self.repository.find_process_change_by_id(process_change_id)
+            
+            process_changes.append(process_change_infos)
+        process_infos = self.repository.find_process_by_id(int(process_id))
         
-        return process_id
+        return {
+            "process": process_infos,
+            "process_changes": process_changes
+        }

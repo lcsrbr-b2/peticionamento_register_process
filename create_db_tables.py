@@ -17,11 +17,11 @@ from app.infra.repositories.SQLAlchemy_ORM.models.process_change import (
 from app.infra.repositories.SQLAlchemy_ORM.models.process_change_type import (
     process_change_type_table,
 )
-from app.infra.repositories.SQLAlchemy_ORM.models.process_change_attachment import (
-    process_change_attachment_table,
+from app.infra.repositories.SQLAlchemy_ORM.models.document import (
+    document_table,
 )
-from app.infra.repositories.SQLAlchemy_ORM.models.document_kind import (
-    document_kind_table,
+from app.infra.repositories.SQLAlchemy_ORM.models.document_type import (
+    document_type_table,
 )
 
 
@@ -41,8 +41,8 @@ def createdb():
     process_change_type_table.create(engine)
     process_part_table.create(engine)
     process_change_table.create(engine)
-    document_kind_table.create(engine)
-    process_change_attachment_table.create(engine)
+    document_type_table.create(engine)
+    document_table.create(engine)
 
 
 if __name__ == "__main__":
